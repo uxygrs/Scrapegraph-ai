@@ -60,7 +60,19 @@ class RAGNode(BaseNode):
         else:
             raise ValueError("client_type provided not correct")
 
-        docs = [elem.get("summary") for elem in state.get("docs")]
+        #########Test changes#############
+        docs = state.get("docs")  # Check if docs exist
+
+        if not docs:
+            self.logger.warning("⚠️ Warning: 'docs' is missing. Falling back to 'parsed_doc'.")
+            docs = [{"summary": chunk} for chunk in state.get("parsed_doc", [])]
+
+        if not docs:
+            raise ValueError("❌ Error: No documents available for embedding!")
+
+        docs = [elem.get("summary") for elem in docs]
+
+        #################################
         ids = list(range(1, len(state.get("docs")) + 1))
 
         if state.get("embeddings"):
