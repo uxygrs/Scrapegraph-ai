@@ -70,6 +70,10 @@ class RAGNode(BaseNode):
         if not docs:
             raise ValueError("❌ Error: No documents available for embedding!")
 
+        # Ensure docs are formatted as a list of dictionaries
+        if isinstance(docs, list) and all(isinstance(doc, str) for doc in docs):
+            docs = [{"summary": doc} for doc in docs]  # Convert strings into dictionaries
+            
         docs = [elem.get("summary") for elem in docs]
 
         #################################
